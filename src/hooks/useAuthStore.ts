@@ -54,12 +54,8 @@ export function getAuthToken(): string | null {
 
 /** Updates only the access token in the store (used by refresh flow). */
 export function setAccessToken(token: string): void {
-  const state = useAuthStore.getState();
-  if (state.user) {
+  if (useAuthStore.getState().user) {
     useAuthStore.setState({ accessToken: token });
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('refreshToken', token);
-    }
   }
 }
 
@@ -67,7 +63,8 @@ export function setAccessToken(token: string): void {
 export function clearAuthAndRedirect(): void {
   useAuthStore.getState().clearAuth();
   if (typeof window !== 'undefined') {
-    sessionStorage.removeItem('refreshToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('currentOrg');
     window.location.href = '/sign-in';
   }
 }

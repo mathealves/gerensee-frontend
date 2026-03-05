@@ -41,6 +41,9 @@ export function OnboardingPage() {
       const { data } = await apiClient.post<OrganizationWithRole>('/organizations', values);
       if (user && accessToken) {
         setAuth({ user, accessToken, currentOrg: data });
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('currentOrg', JSON.stringify(data));
+        }
       }
       router.push('/dashboard');
     } catch {

@@ -39,9 +39,10 @@ export function SignInPage() {
     setApiError(null);
     try {
       const result = await login(values);
-      // Store refresh token in sessionStorage (access token stays in memory)
+      // Persist the refresh token and org so session survives hard refreshes
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem('refreshToken', result.accessToken);
+        localStorage.setItem('refreshToken', result.refreshToken);
+        localStorage.setItem('currentOrg', JSON.stringify(result.organization ?? null));
       }
       setAuth({
         user: result.user,

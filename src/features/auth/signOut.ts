@@ -18,7 +18,8 @@ export async function signOut(): Promise<void> {
   }
   useAuthStore.getState().clearAuth();
   if (typeof window !== 'undefined') {
-    sessionStorage.removeItem('refreshToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('currentOrg');
     window.location.href = '/sign-in';
   }
 }

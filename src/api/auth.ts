@@ -18,8 +18,14 @@ export interface RegisterPayload {
 
 export interface AuthResponse {
   accessToken: string;
+  refreshToken: string;
   user: User;
   organization?: OrganizationWithRole;
+}
+
+export interface RefreshResponse {
+  accessToken: string;
+  refreshToken: string;
 }
 
 export async function login(payload: LoginPayload): Promise<AuthResponse> {
@@ -36,13 +42,12 @@ export async function logout(): Promise<void> {
   await apiClient.post('/auth/logout');
 }
 
-export async function refreshAccessToken(): Promise<string> {
-  const refreshToken =
-    typeof window !== 'undefined' ? sessionStorage.getItem('refreshToken') : null;
-  const { data } = await apiClient.post<{ accessToken: string }>('/auth/refresh', {
+export async function refreshAccessToken(): Promise<RefreshResponse> {
+  const refreshToken = typeof window !== 'undefined' ? localStorage.getItem('refreshToken') : null;
+  const { data } = await apiClient.post<RefreshResponse>('/auth/refresh', {
     refreshToken,
   });
-  return data.accessToken;
+  return data;
 }
 
 export async function getMe(): Promise<User> {

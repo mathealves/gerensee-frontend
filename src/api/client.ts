@@ -71,7 +71,10 @@ apiClient.interceptors.response.use(
 
       try {
         const { refreshAccessToken } = await import('@/api/auth');
-        const newToken = await refreshAccessToken();
+        const { accessToken: newToken, refreshToken: newRefreshToken } = await refreshAccessToken();
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('refreshToken', newRefreshToken);
+        }
         _setToken(newToken);
         processQueue(null, newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
