@@ -1,6 +1,7 @@
 'use client';
 
 import { useEditor, EditorContent } from '@tiptap/react';
+import { useEffect } from 'react';
 import StarterKit from '@tiptap/starter-kit';
 import { Bold, Italic, Heading1, Heading2, List, ListOrdered, Code } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -46,7 +47,14 @@ export function TiptapEditor({ value, onChange, editable = true, className }: Ti
         onChange(editor.getJSON() as TiptapDocument);
       }
     },
+    immediatelyRender: false,
   });
+
+  useEffect(() => {
+    if (editor) {
+      editor.setEditable(editable);
+    }
+  }, [editor, editable]);
 
   return (
     <div className={cn('rounded-md border bg-background', className)}>
@@ -104,13 +112,18 @@ export function TiptapEditor({ value, onChange, editable = true, className }: Ti
         </div>
       )}
 
-      <EditorContent
-        editor={editor}
-        className={cn(
-          'prose prose-sm max-w-none p-4 focus:outline-none',
-          !editable && 'opacity-80',
-        )}
-      />
+      <div
+        className={cn('min-h-[120px]', editable && 'cursor-text')}
+        onClick={() => editable && editor?.commands.focus()}
+      >
+        <EditorContent
+          editor={editor}
+          className={cn(
+            'prose prose-sm max-w-none p-4 [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-[88px] [&_.ProseMirror]:cursor-text',
+            !editable && 'opacity-80 [&_.ProseMirror]:cursor-default',
+          )}
+        />
+      </div>
     </div>
   );
 }
