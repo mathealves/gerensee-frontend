@@ -67,12 +67,7 @@ export function OrgMembersPage() {
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Members</h1>
-        <p className="mt-1 text-muted-foreground">Manage your organization members</p>
-      </div>
-
+    <div>
       {/* Invite form — shown only to OWNER/ADMIN */}
       <RoleGuard action="inviteMember">
         <div className="mb-8 rounded-lg border p-6">
