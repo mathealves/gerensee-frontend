@@ -21,11 +21,11 @@ interface DocumentPageProps {
 export function DocumentPage({ documentId }: DocumentPageProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const project = useProjectContext();
+  const { project } = useProjectContext();
   const currentUser = useAuthStore((s) => s.user);
 
   const { data: doc, isLoading } = useDocument(documentId);
-  const { acquire, release, isAcquiring, isReleasing } = useDocumentLock(documentId);
+  const { acquire, release } = useDocumentLock(documentId);
 
   const [localContent, setLocalContent] = useState<TiptapDocument | null>(null);
 
@@ -35,8 +35,8 @@ export function DocumentPage({ documentId }: DocumentPageProps) {
 
   const saveMutation = useMutation({
     mutationFn: (content: TiptapDocument) => updateDocument(documentId, { content }),
-    onSuccess: async () => {
-      await release();
+    onSuccess: () => {
+      release.mutate();
       queryClient.invalidateQueries({ queryKey: ['document', documentId] });
     },
   });
@@ -49,7 +49,7 @@ export function DocumentPage({ documentId }: DocumentPageProps) {
   });
 
   const handleEdit = useCallback(() => {
-    acquire();
+    acquire.mutate();
   }, [acquire]);
 
   const handleSave = useCallback(() => {
@@ -60,7 +60,7 @@ export function DocumentPage({ documentId }: DocumentPageProps) {
   }, [localContent, doc?.content, saveMutation]);
 
   const handleRelease = useCallback(() => {
-    release();
+    release.mutate();
   }, [release]);
 
   const handleContentChange = useCallback((value: TiptapDocument) => {
@@ -95,9 +95,9 @@ export function DocumentPage({ documentId }: DocumentPageProps) {
         <h1 className="text-2xl font-semibold flex-1 truncate">{doc.title}</h1>
         <div className="flex items-center gap-2 shrink-0">
           {!isLocked && (
-            <Button size="sm" onClick={handleEdit} disabled={isAcquiring}>
+            <Button size="sm" onClick={handleEdit} disabled={acquire.isPending}>
               <Pencil className="h-3.5 w-3.5 mr-1.5" />
-              {isAcquiring ? 'Locking…' : 'Edit'}
+              {acquire.isPending ? 'Locking…' : 'Edit'}
             </Button>
           )}
           {canEdit && (
@@ -124,7 +124,7 @@ export function DocumentPage({ documentId }: DocumentPageProps) {
         <DocumentLockBanner
           lock={doc.lock}
           onRelease={isOwner ? handleRelease : undefined}
-          isReleasing={isReleasing}
+          isReleasing={release.isPending}
         />
       )}
 
