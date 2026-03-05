@@ -13,6 +13,8 @@ interface AuthStore {
     accessToken: string;
     currentOrg?: OrganizationWithRole | null;
   }) => void;
+  /** Switch active organization context without affecting user or token */
+  switchOrg: (org: OrganizationWithRole) => void;
   clearAuth: () => void;
 }
 
@@ -28,6 +30,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
       accessToken,
       currentOrg,
       orgRole: currentOrg?.role ?? null,
+    }),
+
+  switchOrg: (org: OrganizationWithRole) =>
+    set({
+      currentOrg: org,
+      orgRole: org.role,
     }),
 
   clearAuth: () =>
