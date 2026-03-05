@@ -61,11 +61,13 @@ export function DashboardPage() {
   });
 
   return (
-    <div className="p-8">
-      <div className="mb-8 flex items-start justify-between">
+    <div className="px-6 py-6">
+      <div className="mb-6 flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{orgName}</h1>
-          <p className="mt-1 text-muted-foreground">Organization dashboard</p>
+          <h1 className="text-2xl font-bold">Projects</h1>
+          <p className="mt-1 text-muted-foreground">
+            {orgName ? `Projects in ${orgName}` : 'Your projects'}
+          </p>
         </div>
         {org && (
           <Badge variant="secondary" className="text-xs mt-1">

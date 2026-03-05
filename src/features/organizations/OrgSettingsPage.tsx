@@ -43,6 +43,11 @@ export function OrgSettingsPage() {
     try {
       await updateOrganization(currentOrg.id, values);
       queryClient.invalidateQueries({ queryKey: ['organization', currentOrg.id] });
+      // Sync new name into Zustand so sidebar + org switcher update immediately (SC-005)
+      const snapshot = useAuthStore.getState().currentOrg;
+      if (snapshot) {
+        useAuthStore.setState({ currentOrg: { ...snapshot, name: values.name } });
+      }
       setSuccess(true);
     } catch {
       setApiError('Failed to update organization. Please try again.');
@@ -50,12 +55,7 @@ export function OrgSettingsPage() {
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Organization Settings</h1>
-        <p className="mt-1 text-muted-foreground">Manage your organization details</p>
-      </div>
-
+    <div>
       <div className="max-w-md rounded-lg border p-6">
         <h2 className="mb-4 text-lg font-semibold">General</h2>
         <Form {...form}>
