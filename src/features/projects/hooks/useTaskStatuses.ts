@@ -26,6 +26,7 @@ export function useCreateTaskStatus(projectId: string) {
     mutationFn: (payload: CreateTaskStatusPayload) => createTaskStatus(projectId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['task-statuses', projectId] });
+      queryClient.invalidateQueries({ queryKey: ['board', projectId] });
     },
   });
 }

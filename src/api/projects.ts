@@ -102,7 +102,11 @@ export async function createTaskStatus(
   projectId: string,
   payload: CreateTaskStatusPayload,
 ): Promise<TaskStatus> {
-  const { data } = await apiClient.post<TaskStatus>(`/projects/${projectId}/statuses`, payload);
+  const body: CreateTaskStatusPayload = {
+    name: payload.name,
+    ...(payload.color ? { color: payload.color } : {}),
+  };
+  const { data } = await apiClient.post<TaskStatus>(`/projects/${projectId}/statuses`, body);
   return data;
 }
 
