@@ -132,7 +132,7 @@ export function TaskDetailDrawer({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-xl overflow-y-auto p-5">
         <SheetHeader className="mb-4">
           <SheetTitle>{task ? 'Edit Task' : 'New Task'}</SheetTitle>
         </SheetHeader>
