@@ -16,7 +16,7 @@ import { formatRelative } from '@/lib/formatDate';
 export function DocumentsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const project = useProjectContext();
+  const { project } = useProjectContext();
 
   const { data: documents = [], isLoading } = useDocumentList(project.id);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -56,14 +56,10 @@ export function DocumentsPage() {
         </div>
       ) : documents.length === 0 ? (
         <EmptyState
-          title="No documents yet"
+          heading="No documents yet"
           description="Create your first document to share notes and specifications with your team."
-          action={
-            <Button size="sm" onClick={() => setDialogOpen(true)}>
-              <FilePlus className="h-4 w-4 mr-1.5" />
-              New Document
-            </Button>
-          }
+          ctaLabel="New Document"
+          onCta={() => setDialogOpen(true)}
         />
       ) : (
         <ul className="space-y-2">
