@@ -31,8 +31,8 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ErrorBoundary>
           <Providers>
-            <div className="min-h-screen flex flex-col">
-              <main className="flex-1 pb-16">{children}</main>
+            <div className="flex flex-col">
+              {children}
               <Toaster />
               {/* <Footer /> */}
             </div>
