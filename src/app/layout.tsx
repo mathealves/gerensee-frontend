@@ -4,6 +4,7 @@ import './globals.css';
 import { Providers } from '@/lib/Providers';
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 import { Toaster } from '@/components/ui/sonner';
+import Footer from '@/components/shared/Footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -30,8 +31,11 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ErrorBoundary>
           <Providers>
-            {children}
-            <Toaster />
+            <div className="min-h-screen flex flex-col">
+              <main className="flex-1 pb-16">{children}</main>
+              <Toaster />
+              <Footer />
+            </div>
           </Providers>
         </ErrorBoundary>
       </body>
