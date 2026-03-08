@@ -55,6 +55,19 @@ apiClient.interceptors.response.use(
     };
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // The refresh endpoint itself returned 401 — the refresh token is expired
+      // or invalid. Bail out immediately to avoid a deadlock where the interceptor
+      // tries to refresh again and the second request hangs in failedQueue forever.
+      if (originalRequest.url?.includes('/auth/refresh')) {
+        processQueue(error, null);
+        isRefreshing = false;
+        _clearAuth();
+        if (typeof window !== 'undefined') {
+          window.location.href = '/sign-in';
+        }
+        return Promise.reject(error);
+      }
+
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
