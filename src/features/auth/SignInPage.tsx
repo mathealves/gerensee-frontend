@@ -17,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import Footer from '@/components/shared/Footer';
 
 const signInSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -108,6 +109,7 @@ export function SignInPage() {
           </a>
         </p>
       </div>
+      <Footer />
     </div>
   );
 }
